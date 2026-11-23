@@ -107,14 +107,22 @@ const getUserProfile = async (req, res) => {
 const updateUser = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const updates = req.body;
+        const updates = { ...req.body };
 
-        // Si se ha modificado la contraseña, encriptar
-        if (updates.password) {
+        // Evitamos que se intente modificar el _id
+        delete updates._id;
+
+        // Si se ha modificado la contraseña con texto real, encriptar; si viene vacía, eliminarla
+        if (updates.password && updates.password.trim() !== "") {
             const salt = await bcrypt.genSalt(10);
             updates.password = await bcrypt.hash(updates.password, salt);
+        } else {
+            delete updates.password;
         }
-        const userUpdated = await User.findByIdAndUpdate(id, updates, { new: true }).select('-password'); // Actualizar usuario y excluir contraseña por seguridad
+
+        const userUpdated = await User.findByIdAndUpdate(id, updates, { 
+            returnDocument: 'after'
+        }).select('-password');
 
         if (!userUpdated) return res.status(404).json({ message: 'Usuario no encontrado' });
 
@@ -123,6 +131,7 @@ const updateUser = async (req, res, next) => {
         res.status(500).json({ message: 'Error al actualizar el usuario', error: error.message });
     }
 };
+
 
 // 5. ELIMINAR USUARIO (DELETE)
 const deleteUser = async (req, res, next) => {
@@ -138,7 +147,7 @@ const deleteUser = async (req, res, next) => {
 // 6. OBTENER TODOS LOS USUARIOS (GET)
 const getAllUsers = async (req, res, next) => {
     try {
-        const users = await User.find();
+        const users = await User.find().select('-password');
         res.json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error al leer los usuarios' });
@@ -151,7 +160,7 @@ const getUserByUsername = async (req, res, next) => {
         const { username } = req.params;
 
         // Verificar si el usuario existe, ignorando mayúsculas y minúsculas
-        const user = await User.findOne({ username: username.toLowerCase() });
+        const user = await User.findOne({ username: username.toLowerCase() }).select('-password');
         if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
         res.json(user);
     } catch (error) {
