@@ -1,88 +1,215 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body { 
   background-color: #0f172a; 
   color: #f8fafc; 
-  font-family: sans-serif; 
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   display: flex; 
   align-items: center; 
   justify-content: center; 
   min-height: 100vh; 
-  margin: 0; 
+  padding: 24px 16px;
 }
 
-.card { 
+/* Tarjeta principal */
+.api-card { 
   background-color: #1e293b; 
   max-width: 48rem; 
   width: 100%; 
-  margin: 1rem; 
-  padding: 2rem; 
+  padding: 2.25rem 2rem; 
   border-radius: 1rem; 
-  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); 
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45); 
   border: 1px solid #334155; 
-  text-align: center; 
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
 }
 
-h1 { 
-  color: #38bdf8; 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Encabezado y Logo */
+.api-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+#api-logo { 
+  width: 48px;
+  height: 48px;
+  border-radius: 50%; 
+  object-fit: cover;
+  border: 2px solid #2dd4bf;
+  box-shadow: 0 0 15px rgba(45, 212, 191, 0.35);
+}
+
+.api-title { 
   font-size: 2.25rem; 
-  margin: 0; 
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #5eead4, #2dd4bf, #38bdf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.status { 
+.api-version {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 14px;
+}
+
+.api-description {
+  color: #cbd5e1;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  max-width: 560px;
+  margin: 0 auto 20px auto;
+}
+
+/* Píldora de estado activo */
+.status-badge { 
   display: inline-flex; 
   align-items: center; 
-  gap: 0.5rem; 
-  padding: 0.5rem 1rem; 
-  background-color: rgba(16,185,129,0.1); 
+  gap: 10px; 
+  padding: 0.5rem 1.1rem; 
+  background-color: rgba(16, 185, 129, 0.12); 
   color: #34d399; 
-  border: 1px solid rgba(16,185,129,0.3); 
+  border: 1px solid rgba(16, 185, 129, 0.35); 
   border-radius: 9999px; 
   font-size: 0.875rem; 
   font-weight: 600; 
-  margin-top: 1.5rem; 
 }
 
-.endpoint-container { 
-  text-align: left; 
-  margin-top: 2rem; 
+.status-dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  background-color: #10b981;
+  border-radius: 50%;
 }
 
-.endpoint { 
-  display: flex; 
-  align-items: center; 
-  gap: 1rem; 
-  padding: 0.5rem; 
-  background-color: rgba(15,23,42,0.5); 
-  border-radius: 0.25rem; 
-  border: 1px solid rgba(51,65,85,0.5); 
-  margin-bottom: 0.75rem; 
-  font-family: monospace; 
-  font-size: 0.875rem; 
+.status-dot::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: #10b981;
+  animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
-.badge-post { 
-  background-color: rgba(16,185,129,0.2); 
-  color: #34d399; 
-  padding: 0.25rem 0.5rem; 
-  border-radius: 0.25rem; 
-  font-weight: bold; 
-  width: 4rem; 
-  text-align: center; 
+@keyframes ping {
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
 }
 
-.badge-get { 
-  background-color: rgba(59,130,246,0.2); 
-  color: #60a5fa; 
-  padding: 0.25rem 0.5rem; 
-  border-radius: 0.25rem; 
-  font-weight: bold; 
-  width: 4rem; 
-  text-align: center; 
+/* Sección y Tabla de Endpoints */
+.endpoints-section {
+  margin-top: 28px;
+  text-align: left;
 }
 
-footer { 
+.endpoints-title {
+  font-size: 1.15rem;
+  color: #e2e8f0;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #334155;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid #334155;
+}
+
+.api-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #0f172a;
+  font-size: 0.9rem;
+}
+
+.api-table th,
+.api-table td {
+  padding: 10px 14px;
+  border: 1px solid #1e293b;
+}
+
+.api-table thead th {
+  background-color: #162032;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.col-method {
+  width: 95px;
+}
+
+.col-access {
+  width: 145px;
+  text-align: right;
+}
+
+.group-row td {
+  background-color: #131c2e;
+  color: #2dd4bf;
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.api-table tbody tr:hover:not(.group-row) {
+  background-color: #1e293b;
+}
+
+.endpoint-path {
+  font-family: monospace;
+  color: #f1f5f9;
+}
+
+/* Badges de métodos HTTP (unificados sin duplicados) */
+.badge {
+  display: inline-block;
+  width: 64px;
+  text-align: center;
+  padding: 3px 0;
+  border-radius: 4px;
+  font-family: monospace;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.badge-post { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.badge-get { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+.badge-put { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+.badge-delete { background: rgba(244, 63, 94, 0.15); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.4); }
+
+.access-public { color: #94a3b8; font-size: 0.8rem; }
+.access-private { color: #fbbf24; font-size: 0.8rem; font-weight: 600; }
+
+/* Pie de página */
+.api-footer { 
   margin-top: 2rem; 
   padding-top: 1.5rem; 
   border-top: 1px solid #334155; 
-  font-size: 0.75rem; 
+  font-size: 0.8rem; 
   color: #64748b; 
+}
+
+.api-footer strong {
+  color: #94a3b8;
 }
